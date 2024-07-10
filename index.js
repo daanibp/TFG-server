@@ -36,8 +36,10 @@ app.use("/notificacionesglobales", NotificacionesGlobales);
 
 //app.get("/validate/:token");
 
+const port = process.env.PORT || 5001;
+
 db.sequelize.sync().then(() => {
-    app.listen(5001, () => {
-        console.log("Server running on port 5001");
+    app.listen(port, () => {
+        console.log("Server running on port " + port);
     });
 });
