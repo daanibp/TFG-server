@@ -39,8 +39,13 @@ app.use("/notificacionesglobales", NotificacionesGlobales);
 
 const port = process.env.PORT || 5001;
 
-db.sequelize.sync().then(() => {
-    app.listen(port, () => {
-        console.log("Server running on port " + port);
+db.sequelize
+    .sync()
+    .then(() => {
+        app.listen(port, () => {
+            console.log("Server running on port " + port);
+        });
+    })
+    .catch((err) => {
+        console.log(err);
     });
-});
