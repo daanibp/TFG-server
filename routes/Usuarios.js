@@ -20,6 +20,9 @@ const transporter = nodemailer.createTransport({
         user: "MiAreaPersonal@outlook.com",
         pass: "MiTFG/2024",
     },
+    tls: {
+        ciphers: "SSLv3",
+    },
 });
 
 const jwtSecret = "importantsecret";
