@@ -77,7 +77,7 @@ router.post("/register", async (req, res) => {
         if (!uo.startsWith("UO")) {
             const hashedPassword = await bcrypt.hash(newPassword, 10);
             const token = sign({ uo: uo }, jwtSecret, { expiresIn: "1h" });
-            const validationUrl = `http://localhost:5001/usuarios/validate/${token}`;
+            const validationUrl = `https://miareapersonalserver.azurewebsites.net/usuarios/validate/${token}`;
             const shortUrl = await getShortenedUrl(validationUrl);
 
             // Es un profesor y hay que crearle una cuenta
@@ -126,7 +126,7 @@ router.post("/register", async (req, res) => {
 
             const hashedPassword = await bcrypt.hash(newPassword, 10);
             const token = sign({ uo: uo }, jwtSecret, { expiresIn: "1h" });
-            const validationUrl = `http://localhost:5001/usuarios/validate/${token}`;
+            const validationUrl = `https://miareapersonalserver.azurewebsites.net/usuarios/validate/${token}`;
             const shortUrl = await getShortenedUrl(validationUrl);
             // Usuario existente, actualizar la contraseña y estado
             await Usuarios.update(
@@ -263,7 +263,7 @@ async function createEventsForUser(uo) {
             const lote = eventos.slice(i, i + tamañoLote);
             // Agregar los eventos que no existan
             const response = await axios.post(
-                `http://localhost:5001/eventos/addLoteEventos`,
+                `https://miareapersonalserver.azurewebsites.net/eventos/addLoteEventos`,
                 lote
             );
 
