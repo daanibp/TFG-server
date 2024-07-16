@@ -147,6 +147,8 @@ router.post("/register", async (req, res) => {
 
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
+                    console.error("Error al enviar correo:", error);
+                    console.error("Detalles del error: ", info);
                     return res.status(500).json({
                         error: "Error al enviar el correo de validación",
                     });
