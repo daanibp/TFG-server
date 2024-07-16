@@ -8,31 +8,33 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const axios = require("axios");
 const { Op } = require("sequelize");
+const { AuthorizationCode } = require("simple-oauth2");
 // import dotenv from "dotenv";
 // dotenv.config();
 
 // Configuración de Nodemailer para Outlook
-// const transporter = nodemailer.createTransport({
-//     host: "smtp.office365.com", // Servidor SMTP de Outlook
-//     port: 587,
-//     secure: false, // true para el puerto 465, false para otros puertos
-//     auth: {
-//         user: "MiAreaPersonal@outlook.com",
-//         pass: "MiTFG/2024",
-//     },
-//     tls: {
-//         ciphers: "SSLv3",
-//     },
-// });
-
-// Configuración de Nodemailer para Outlook
 const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com", // Servidor SMTP de gmail
+    host: "smtp.office365.com", // Servidor SMTP de Outlook
+    port: 465,
+    secure: true, // true para el puerto 465, false para otros puertos
     auth: {
-        user: "MiAreaPersonalTFG@gmail.com",
+        user: "MiAreaPersonal@outlook.com",
         pass: "MiTFG/2024",
     },
 });
+
+// Configuración de OAuth2
+// const oauth2Client = new AuthorizationCode({
+//     client: {
+//         id: process.env.CLIENT_ID,  // Client ID de tu aplicación registrada en Azure
+//         secret: process.env.CLIENT_SECRET,  // Client Secret de tu aplicación registrada en Azure
+//     },
+//     auth: {
+//         tokenHost: 'https://login.microsoftonline.com',
+//         authorizePath: `/${process.env.TENANT_ID}/oauth2/v2.0/authorize`,  // Tenant ID de tu aplicación registrada en Azure
+//         tokenPath: `/${process.env.TENANT_ID}/oauth2/v2.0/token`,
+//     },
+// });
 
 const jwtSecret = "importantsecret";
 const apiKey = "DgDdU7mwgJSgsGZFemrziHpKdJcQUJDDMxBbC3wc9ZOapyjHStf66vqxZlX4";
@@ -97,19 +99,16 @@ router.post("/register", async (req, res) => {
                 uo: uo,
                 password: hashedPassword,
                 //email: `${uo}@uniovi.es`,
-                //email: "uo277476@uniovi.es",
-                email: "danielborgepuga@gmail.com",
+                email: "uo277476@uniovi.es",
                 admin: 0,
                 profesor: true,
                 estado: "Pendiente",
             });
 
             const mailOptions = {
-                //from: "MiAreaPersonal@outlook.com",
-                from: "MiAreaPersonalTFG@gmail.com",
+                from: "MiAreaPersonal@outlook.com",
                 //to: `${uo}@uniovi.es`,
-                //to: "uo277476@uniovi.es",
-                to: "danielborgepuga@gmail.com",
+                to: "uo277476@uniovi.es",
                 subject: "Validación de cuenta",
                 text: `Haz clic en el siguiente enlace para validar tu cuenta: ${shortUrl}`,
             };
@@ -150,11 +149,9 @@ router.post("/register", async (req, res) => {
             );
 
             const mailOptions = {
-                //from: "MiAreaPersonal@outlook.com",
-                from: "MiAreaPersonalTFG@gmail.com",
-                //to: "uo277476@uniovi.es",
+                from: "MiAreaPersonal@outlook.com",
+                to: "uo277476@uniovi.es",
                 // to: user.email,
-                to: "danielborgepuga@gmail.com",
                 subject: "Validación de cuenta",
                 text: `Haz clic en el siguiente enlace para validar tu cuenta: ${shortUrl}`,
             };
