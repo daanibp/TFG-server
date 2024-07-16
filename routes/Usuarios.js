@@ -23,19 +23,6 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-// Configuración de OAuth2
-// const oauth2Client = new AuthorizationCode({
-//     client: {
-//         id: process.env.CLIENT_ID,  // Client ID de tu aplicación registrada en Azure
-//         secret: process.env.CLIENT_SECRET,  // Client Secret de tu aplicación registrada en Azure
-//     },
-//     auth: {
-//         tokenHost: 'https://login.microsoftonline.com',
-//         authorizePath: `/${process.env.TENANT_ID}/oauth2/v2.0/authorize`,  // Tenant ID de tu aplicación registrada en Azure
-//         tokenPath: `/${process.env.TENANT_ID}/oauth2/v2.0/token`,
-//     },
-// });
-
 const jwtSecret = "importantsecret";
 const apiKey = "DgDdU7mwgJSgsGZFemrziHpKdJcQUJDDMxBbC3wc9ZOapyjHStf66vqxZlX4";
 const bitlyApiKey = "56bfdd8350ea0e7a55cd40f082063d42727b8fc8";
