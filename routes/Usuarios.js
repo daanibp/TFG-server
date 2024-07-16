@@ -8,15 +8,15 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const axios = require("axios");
 const { Op } = require("sequelize");
-const { AuthorizationCode } = require("simple-oauth2");
+//const { AuthorizationCode } = require("simple-oauth2");
 // import dotenv from "dotenv";
 // dotenv.config();
 
 // Configuración de Nodemailer para Outlook
 const transporter = nodemailer.createTransport({
-    host: "smtp.office365.com", // Servidor SMTP de Outlook
-    port: 465,
-    secure: true, // true para el puerto 465, false para otros puertos
+    host: "smtp.-mail.outlook.com", // Servidor SMTP de Outlook
+    port: 587,
+    secure: false, // true para el puerto 465, false para otros puertos
     auth: {
         user: "MiAreaPersonal@outlook.com",
         pass: "MiTFG/2024",
