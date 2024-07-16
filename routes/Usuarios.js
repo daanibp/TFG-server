@@ -27,15 +27,10 @@ const { Op } = require("sequelize");
 
 // Configuración de Nodemailer para Outlook
 const transporter = nodemailer.createTransport({
-    host: "smtp.office365.com", // Servidor SMTP de Outlook
-    port: 587,
-    secure: false, // true para el puerto 465, false para otros puertos
+    host: "smtp.gmail.com", // Servidor SMTP de gmail
     auth: {
-        user: "MiAreaPersonal@outlook.com",
+        user: "MiAreaPersonalTFG@gmail.com",
         pass: "MiTFG/2024",
-    },
-    tls: {
-        rejectUnauthorized: false,
     },
 });
 
@@ -102,16 +97,19 @@ router.post("/register", async (req, res) => {
                 uo: uo,
                 password: hashedPassword,
                 //email: `${uo}@uniovi.es`,
-                email: "uo277476@uniovi.es",
+                //email: "uo277476@uniovi.es",
+                email: "danielborgepuga@gmail.com",
                 admin: 0,
                 profesor: true,
                 estado: "Pendiente",
             });
 
             const mailOptions = {
-                from: "MiAreaPersonal@outlook.com",
+                //from: "MiAreaPersonal@outlook.com",
+                from: "MiAreaPersonalTFG@gmail.com",
                 //to: `${uo}@uniovi.es`,
-                to: "uo277476@uniovi.es",
+                //to: "uo277476@uniovi.es",
+                to: "danielborgepuga@gmail.com",
                 subject: "Validación de cuenta",
                 text: `Haz clic en el siguiente enlace para validar tu cuenta: ${shortUrl}`,
             };
@@ -152,9 +150,11 @@ router.post("/register", async (req, res) => {
             );
 
             const mailOptions = {
-                from: "MiAreaPersonal@outlook.com",
-                to: "uo277476@uniovi.es",
+                //from: "MiAreaPersonal@outlook.com",
+                from: "MiAreaPersonalTFG@gmail.com",
+                //to: "uo277476@uniovi.es",
                 // to: user.email,
+                to: "danielborgepuga@gmail.com",
                 subject: "Validación de cuenta",
                 text: `Haz clic en el siguiente enlace para validar tu cuenta: ${shortUrl}`,
             };
