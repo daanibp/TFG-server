@@ -27,7 +27,7 @@ const { Op } = require("sequelize");
 
 // Configuración de Nodemailer para Outlook
 const transporter = nodemailer.createTransport({
-    host: "smtp-mail.outlook.com", // Servidor SMTP de Outlook
+    host: "smtp.office365.com", // Servidor SMTP de Outlook
     port: 587,
     secure: false, // true para el puerto 465, false para otros puertos
     auth: {
@@ -35,7 +35,7 @@ const transporter = nodemailer.createTransport({
         pass: "MiTFG/2024",
     },
     tls: {
-        ciphers: "STARTTLS",
+        rejectUnauthorized: false,
     },
 });
 
