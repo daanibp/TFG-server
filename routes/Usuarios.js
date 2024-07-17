@@ -11,6 +11,33 @@ const { Op } = require("sequelize");
 //const { AuthorizationCode } = require("simple-oauth2");
 // import dotenv from "dotenv";
 // dotenv.config();
+require("dotenv").config();
+
+const sgMail = require("@sendgrid/mail");
+
+// Variables de entorno
+const sendgridApiKey = process.env.SENDGRID_API_KEY;
+const jwtSecret = process.env.JWT_SECRET;
+const bitlyApiKey = process.env.BITLY_API_KEY;
+const apiKey = process.env.API_KEY;
+
+sgMail.setApiKey(sendgridApiKey);
+
+async function sendValidationEmail(to, shortUrl) {
+    const msg = {
+        to: to,
+        from: "MiAreaPersonal@outlook.com", // Dirección verificada de SendGrid
+        subject: "Validación de cuenta",
+        text: `Haz clic en el siguiente enlace para validar tu cuenta: ${shortUrl}`,
+    };
+
+    try {
+        await sgMail.send(msg);
+        console.log("Correo de validación enviado");
+    } catch (error) {
+        console.error("Error al enviar el correo de validación", error);
+    }
+}
 
 // Configuración de Nodemailer para Outlook
 const transporter = nodemailer.createTransport({
@@ -23,10 +50,6 @@ const transporter = nodemailer.createTransport({
         pass: "MiTFG/2024",
     },
 });
-
-const jwtSecret = "importantsecret";
-const apiKey = "DgDdU7mwgJSgsGZFemrziHpKdJcQUJDDMxBbC3wc9ZOapyjHStf66vqxZlX4";
-const bitlyApiKey = "56bfdd8350ea0e7a55cd40f082063d42727b8fc8";
 
 async function getShortenedUrl(longUrl) {
     try {
@@ -71,6 +94,143 @@ async function getShortenedUrl(longUrl) {
     }
 }
 
+// router.post("/register", async (req, res) => {
+//     const { uo, newPassword } = req.body;
+
+//     try {
+//         // PROFESOR
+//         if (!uo.startsWith("UO")) {
+//             const hashedPassword = await bcrypt.hash(newPassword, 10);
+//             const token = sign({ uo: uo }, jwtSecret, { expiresIn: "1h" });
+//             const validationUrl = `https://miareapersonalserver.azurewebsites.net/usuarios/validate/${token}`;
+//             const shortUrl = await getShortenedUrl(validationUrl);
+
+//             // Es un profesor y hay que crearle una cuenta
+//             await Usuarios.create({
+//                 uo: uo,
+//                 password: hashedPassword,
+//                 //email: `${uo}@uniovi.es`,
+//                 email: "uo277476@uniovi.es",
+//                 admin: 0,
+//                 profesor: true,
+//                 estado: "Pendiente",
+//             });
+
+//             const mailOptions = {
+//                 from: "MiAreaPersonal@outlook.com",
+//                 //to: `${uo}@uniovi.es`,
+//                 to: "uo277476@uniovi.es",
+//                 subject: "Validación de cuenta",
+//                 text: `Haz clic en el siguiente enlace para validar tu cuenta: ${shortUrl}`,
+//             };
+
+//             transporter.sendMail(mailOptions, (error, info) => {
+//                 if (error) {
+//                     return res.status(500).json({
+//                         error: "Error al enviar el correo de validación",
+//                     });
+//                 }
+//                 return res
+//                     .status(200)
+//                     .json({ message: "Correo de validación enviado" });
+//             });
+//         } else {
+//             const user = await Usuarios.findOne({ where: { uo: uo } });
+
+//             if (!user) {
+//                 return res
+//                     .status(400)
+//                     .json({ error: "Usuario no registrado en el sistema." });
+//             }
+
+//             if (user.estado === "Activa") {
+//                 return res.status(400).json({
+//                     error: "Este usuario ya está registrado en el sistema.",
+//                 });
+//             }
+
+//             const hashedPassword = await bcrypt.hash(newPassword, 10);
+//             const token = sign({ uo: uo }, jwtSecret, { expiresIn: "1h" });
+//             const validationUrl = `https://miareapersonalserver.azurewebsites.net/usuarios/validate/${token}`;
+//             const shortUrl = await getShortenedUrl(validationUrl);
+//             // Usuario existente, actualizar la contraseña y estado
+//             await Usuarios.update(
+//                 { password: hashedPassword, estado: "Pendiente" },
+//                 { where: { uo: uo } }
+//             );
+
+//             const mailOptions = {
+//                 from: "MiAreaPersonal@outlook.com",
+//                 to: "uo277476@uniovi.es",
+//                 // to: user.email,
+//                 subject: "Validación de cuenta",
+//                 text: `Haz clic en el siguiente enlace para validar tu cuenta: ${shortUrl}`,
+//             };
+
+//             transporter.sendMail(mailOptions, (error, info) => {
+//                 if (error) {
+//                     console.error("Error al enviar correo:", error);
+//                     console.error("Detalles del error: ", info);
+//                     return res.status(500).json({
+//                         error: "Error al enviar el correo de validación",
+//                     });
+//                 }
+//                 return res
+//                     .status(200)
+//                     .json({ message: "Correo de validación enviado" });
+//             });
+//         }
+//     } catch (error) {
+//         console.error("Error en el servidor:", error);
+//         res.status(500).json({ error: "Error en el servidor" });
+//     }
+// });
+
+// // Ruta para la validación del usuario
+// router.get("/validate/:token", async (req, res) => {
+//     const { token } = req.params;
+
+//     try {
+//         // Verificar y decodificar el token
+//         const decoded = verify(token, jwtSecret);
+//         console.log("Decoded: ", decoded);
+//         const { uo } = decoded;
+//         console.log("UO: ", uo);
+
+//         // Obtener el usuario
+//         //const usuario = await Usuarios.findOne({ where: { uo: uo } });
+
+//         // Actualizar el estado del usuario a "Activa"
+//         await Usuarios.update({ estado: "Activa" }, { where: { uo: uo } });
+
+//         // Crear eventos para el usuario
+//         // if (usuario.uo.startsWith("UO")) {
+//         //     await createEventsForUser(uo);
+//         // }
+
+//         // Responder al usuario con un mensaje de éxito
+//         res.status(200).send(
+//             "Cuenta activada correctamente. Ahora puedes iniciar sesión."
+//         );
+//     } catch (error) {
+//         console.error("Error verifying token: ", error); // Log the error
+//         // Manejar errores de token inválido o caducado
+//         if (error.name === "TokenExpiredError") {
+//             res.status(400).send(
+//                 "El token ha expirado. Por favor, solicita un nuevo enlace."
+//             );
+//         } else if (error.name === "JsonWebTokenError") {
+//             res.status(400).send(
+//                 "Token inválido. Por favor, solicita un nuevo enlace."
+//             );
+//         } else {
+//             res.status(500).send(
+//                 "Error en el servidor. Por favor, intenta nuevamente más tarde."
+//             );
+//         }
+//     }
+// });
+
 router.post("/register", async (req, res) => {
     const { uo, newPassword } = req.body;
 
@@ -93,24 +253,24 @@ router.post("/register", async (req, res) => {
                 estado: "Pendiente",
             });
 
-            const mailOptions = {
-                from: "MiAreaPersonal@outlook.com",
-                //to: `${uo}@uniovi.es`,
+            const msg = {
                 to: "uo277476@uniovi.es",
+                from: "MiAreaPersonal@outlook.com",
                 subject: "Validación de cuenta",
                 text: `Haz clic en el siguiente enlace para validar tu cuenta: ${shortUrl}`,
             };
 
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    return res.status(500).json({
-                        error: "Error al enviar el correo de validación",
-                    });
-                }
+            try {
+                await sgMail.send(msg);
                 return res
                     .status(200)
                     .json({ message: "Correo de validación enviado" });
-            });
+            } catch (error) {
+                console.error("Error al enviar correo:", error);
+                return res
+                    .status(500)
+                    .json({ error: "Error al enviar el correo de validación" });
+            }
         } else {
             const user = await Usuarios.findOne({ where: { uo: uo } });
 
@@ -136,26 +296,24 @@ router.post("/register", async (req, res) => {
                 { where: { uo: uo } }
             );
 
-            const mailOptions = {
-                from: "MiAreaPersonal@outlook.com",
+            const msg = {
                 to: "uo277476@uniovi.es",
-                // to: user.email,
+                from: "MiAreaPersonal@outlook.com", // Dirección verificada en SendGrid
                 subject: "Validación de cuenta",
                 text: `Haz clic en el siguiente enlace para validar tu cuenta: ${shortUrl}`,
             };
 
-            transporter.sendMail(mailOptions, (error, info) => {
-                if (error) {
-                    console.error("Error al enviar correo:", error);
-                    console.error("Detalles del error: ", info);
-                    return res.status(500).json({
-                        error: "Error al enviar el correo de validación",
-                    });
-                }
+            try {
+                await sgMail.send(msg);
                 return res
                     .status(200)
                     .json({ message: "Correo de validación enviado" });
-            });
+            } catch (error) {
+                console.error("Error al enviar correo:", error);
+                return res
+                    .status(500)
+                    .json({ error: "Error al enviar el correo de validación" });
+            }
         }
     } catch (error) {
         console.error("Error en el servidor:", error);
