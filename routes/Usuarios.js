@@ -23,33 +23,17 @@ const apiKey = process.env.API_KEY;
 
 sgMail.setApiKey(sendgridApiKey);
 
-async function sendValidationEmail(to, shortUrl) {
-    const msg = {
-        to: to,
-        from: "MiAreaPersonal@outlook.com", // Dirección verificada de SendGrid
-        subject: "Validación de cuenta",
-        text: `Haz clic en el siguiente enlace para validar tu cuenta: ${shortUrl}`,
-    };
-
-    try {
-        await sgMail.send(msg);
-        console.log("Correo de validación enviado");
-    } catch (error) {
-        console.error("Error al enviar el correo de validación", error);
-    }
-}
-
-// Configuración de Nodemailer para Outlook
-const transporter = nodemailer.createTransport({
-    //host: "smtp-mail.outlook.com",
-    host: "smtp.office365.com", // Servidor SMTP de Outlook
-    port: 587,
-    secure: false, // true para el puerto 465, false para otros puertos
-    auth: {
-        user: "MiAreaPersonal@outlook.com",
-        pass: "MiTFG/2024",
-    },
-});
+// // Configuración de Nodemailer para Outlook
+// const transporter = nodemailer.createTransport({
+//     //host: "smtp-mail.outlook.com",
+//     host: "smtp.office365.com", // Servidor SMTP de Outlook
+//     port: 587,
+//     secure: false, // true para el puerto 465, false para otros puertos
+//     auth: {
+//         user: "MiAreaPersonal@outlook.com",
+//         pass: "MiTFG/2024",
+//     },
+// });
 
 async function getShortenedUrl(longUrl) {
     try {
