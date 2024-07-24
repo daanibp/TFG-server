@@ -37,6 +37,8 @@ router.post("/addGlobalEvent", async (req, res) => {
         SolicitudEventoId,
     } = req.body;
 
+    console.log("Solicitud Id: ", SolicitudEventoId);
+
     const nuevoEvento = await EventosGlobales.create({
         asunto,
         fechaDeComienzo,
